@@ -3,6 +3,7 @@ package com.italika.product_crud.controller;
 import com.italika.product_crud.model.Product;
 import com.italika.product_crud.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,30 +15,32 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @PostMapping
+    @PostMapping("/productos")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return ResponseEntity.ok(productService.createProduct(product));
+        // Llama al servicio para guardar el producto
+        Product savedProduct = productService.createProduct(product);
+        // Retorna el producto guardado con el estado 201
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/productos/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProduct(id));
     }
 
-    @GetMapping
+    @GetMapping("/productos")
     public ResponseEntity<List<Product>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    /*
-    @PutMapping("/{id}")
+    @PutMapping("/productos/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+        String response = productService.updateProduct(id, product);
+        return ResponseEntity.ok(response); // Devuelve un mensaje de respuesta
     }
 
-     */
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/productos/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
